@@ -1,0 +1,27 @@
+
+#dragAndDrop {
+  min-height: 300px;
+  border: 5px dotted rgb(39, 132, 176);
+  margin: 2em 0.5em;
+}
+
+#fileInput {
+  display: inline-block;
+}
+
+#dragAndDrop h2 {
+  padding: 3em;
+}
+
+.bg-dayone {
+  background-color: rgb(39, 132, 176);
+  color: #fff;
+}
+
+.text-dayone {
+  color: rgb(39, 132, 176);
+}
+
+.margin-bottom-none {
+  margin-bottom: 0;
+}

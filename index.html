@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Day One HTML</title>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="bower_components/zip.js/WebContent/zip.js"></script>
+    <script type="text/javascript" src="lib/plist_parser.js"></script>
+    <script type="text/javascript" src="lib/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+    <script type="text/javascript">
+      zip.workerScriptsPath = "bower_components/zip.js/WebContent/";
+    </script>
+    <link type="text/css" rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="style.css" />
+    <script type="text/javascript" src="script.js"></script>
+  </head>
+  <body>
+    <div id="fileSelector">
+      <div class="jumbotron bg-dayone margin-bottom-none">
+        <div class="container">
+          <div class="text-center">
+            <h1>Day One to HTML</h1>
+          </div>
+        </div>
+      </div>
+      <div class="jumbotron">
+        <div class="container">
+          <div class="text-center">
+            <h2>Browse for Day One file
+              <br/>
+              <small>Usually found at <code>~/Dropbox/Apps/Day One/Journal.dayone</code></small>
+            </h2>
+            <input type="file" id="fileInput" multiple />
+          </div>
+        </div>
+      </div>
+      <div class="margin-bottom-none">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12">
+              <div id="dragAndDrop" class="text-dayone text-center">
+                <h2>Or... Drop Journal.dayone here</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dayOneRenderTarget"></div>
+  </body>
+</html>

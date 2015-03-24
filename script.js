@@ -34,13 +34,12 @@ $(function() {
             // get first entry content as text
             entry.getData(new zip.TextWriter(), function(text) {
               // text contains the entry data as a String
-              console.log(text);
+              var jsonString = PlistParser.parse(text);
+              console.log(jsonString);
             });
           }
-          if(entry.filename.match(/.*\.jpg/)) {
-            _this.loadImageCounter++;
-            if(_this.loadImageCounter > 20)
-              return;
+          _this.loadImageCounter++;
+          if(entry.filename.match(/.*\.jpg/) && _this.loadImageCounter <= 10) {
             entry.getData(new zip.BlobWriter(), function(blob) {
               loadImage(
                   blob,

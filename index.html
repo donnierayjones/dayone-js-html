@@ -9,13 +9,12 @@
     <script type="text/javascript" src="bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
     <script type="text/javascript" src="lib/plist_parser/plist_parser.js"></script>
     <script type="text/javascript" src="lib/marked/marked.min.js"></script>
-    <script type="text/javascript" src="lib/JavaScript-Load-Image/js/load-image.all.min.js"></script>
     <link type="text/css" rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="style.css" />
     <script type="text/javascript" src="script.js"></script>
     <script type="text/template" id="dayOneEntryTemplate">
       <div class="row do-entry">
-        <div class="col-sm-offset-2 col-sm-8">
+        <div class="col-xs-offset-2 col-xs-8">
           <% if(entry.hasPhoto()) { %>
             <img class="do-entry-photo" src="<%= entry.getPhotoDataURL() %>" />
           <% } %>
@@ -23,7 +22,7 @@
             <%= entry.text() %>
           </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-xs-2">
           <div class="do-entry-date">
             <%= entry.creationDate() %><br/>
             <%= entry.creationTime() %><br/>

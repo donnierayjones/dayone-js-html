@@ -84,6 +84,7 @@ $(function() {
     if(files.length === 0) {
       return;
     };
+
     var root = files[0].webkitGetAsEntry();
 
     this.loadEntries(root, function() {
@@ -139,21 +140,16 @@ $(function() {
         photos.forEach(function(photo) {
           photo.file(function(file) {
             var fileName = file.name.substring(0, 32);
-            var fileReader = new FileReader();
-            fileReader.onload = function(e) {
-                var dataURL = fileReader.result;
-                var entry = _this.entries[fileName];
-                if(entry) {
-                  entry.setPhotoDataURL(dataURL);
-                } else {
-                  console.log("No entry found for photo: " + fileName);
-                }
-                photosProcessed++;
-                if(photosProcessed === photos.length) {
-                  onComplete();
-                }
+
+            var dataURL = URL.createObjectURL(file);
+            var entry = _this.entries[fileName];
+            entry.setPhotoDataURL(dataURL);
+
+            photosProcessed++;
+
+            if(photosProcessed === photos.length) {
+              onComplete();
             }
-            fileReader.readAsDataURL(file);
           });
         });
       };

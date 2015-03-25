@@ -4,15 +4,33 @@
     <title>Day One HTML</title>
     <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="bower_components/zip.js/WebContent/zip.js"></script>
-    <script type="text/javascript" src="lib/plist_parser.js"></script>
+    <script type="text/javascript" src="bower_components/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+    <script type="text/javascript" src="lib/plist_parser/plist_parser.js"></script>
+    <script type="text/javascript" src="lib/marked/marked.min.js"></script>
     <script type="text/javascript" src="lib/JavaScript-Load-Image/js/load-image.all.min.js"></script>
-    <script type="text/javascript">
-      zip.workerScriptsPath = "bower_components/zip.js/WebContent/";
-    </script>
     <link type="text/css" rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="style.css" />
     <script type="text/javascript" src="script.js"></script>
+    <script type="text/template" id="dayOneEntryTemplate">
+      <div class="row do-entry">
+        <div class="col-sm-offset-2 col-sm-8">
+          <% if(entry.hasPhoto()) { %>
+            <img class="do-entry-photo" src="<%= entry.getPhotoDataURL() %>" />
+          <% } %>
+          <div class="do-entry-text">
+            <%= entry.text() %>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="do-entry-date">
+            <%= entry.creationDate() %><br/>
+            <%= entry.creationTime() %><br/>
+          </div>
+        </div>
+      </div>
+    </script>
   </head>
   <body>
     <div id="fileSelector">
@@ -23,29 +41,23 @@
           </div>
         </div>
       </div>
-      <div class="jumbotron">
-        <div class="container">
-          <div class="text-center">
-            <h2>Browse for Day One file
-              <br/>
-              <small>Usually found at <code>~/Dropbox/Apps/Day One/Journal.dayone</code></small>
-            </h2>
-            <input type="file" id="fileInput" multiple />
-          </div>
-        </div>
-      </div>
       <div class="margin-bottom-none">
         <div class="container">
           <div class="row">
             <div class="col-xs-12">
               <div id="dragAndDrop" class="text-dayone text-center">
-                <h2>Or... Drop Journal.dayone here</h2>
+                <h2>Drop Journal.dayone Here
+                  <br/>
+                  <small>Usually found at <code>~/Dropbox/Apps/Day One/Journal.dayone</code></small>
+                </h2>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="dayOneRenderTarget"></div>
+    <div class="container">
+      <div id="dayOneRenderTarget"></div>
+    </div>
   </body>
 </html>

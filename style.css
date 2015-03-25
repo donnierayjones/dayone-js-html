@@ -25,3 +25,36 @@
 .margin-bottom-none {
   margin-bottom: 0;
 }
+
+.do-entry {
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+
+.do-entry-date {
+  font-size: 0.9em;
+  color: #999;
+}
+
+.do-entry-photo {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.do-entry-photo + .do-entry-text {
+  padding-top: 1em;
+}
+
+.do-entry-text {
+  page-break-inside:avoid;
+}
+
+.do-entry-text p:first-child {
+  margin-top: 0;
+}
+
+.do-entry-text p:first-child:first-line {
+  font-size: 1.3em;
+  line-height: 1.5em;
+}

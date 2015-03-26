@@ -63,11 +63,6 @@ $(function() {
     });
   };
 
-  DayOneRenderer.prototype.onEntryTextLoaded = function(text) {
-    var plistData = PlistParser.parse(text);
-    this.addEntry(new DayOneEntry(plistData));
-  };
-
   DayOneRenderer.prototype.addEntry = function(dayOneEntry) {
     this.entries[dayOneEntry.UUID()] = dayOneEntry;
   };
@@ -85,29 +80,34 @@ $(function() {
       return;
     };
 
-    var root = files[0].webkitGetAsEntry();
+    var dayOneFolder = files[0].webkitGetAsEntry();
 
-    this.loadEntries(root, function() {
+    this.loadEntries(dayOneFolder, function() {
       _this.render();
     });
   };
 
-  DayOneRenderer.prototype.loadEntries = function(root, onComplete) {
+  DayOneRenderer.prototype.loadEntries = function(dayOneFolder, onComplete) {
     var _this = this;
-    root.getDirectory('entries', null, function(entriesDirectory) {
+    dayOneFolder.getDirectory('entries', null, function(entriesDirectory) {
       var directoryReader = entriesDirectory.createReader();
       var allEntries = [];
       var processEntries = function() {
         var entryCount = allEntries.length;
         var entriesProcessed = 0;
+        var onEntryTextLoaded = function(text) {
+          var plistData = PlistParser.parse(text);
+          _this.addEntry(new DayOneEntry(plistData));
+        };
+
         allEntries.forEach(function(entry) {
           entry.file(function(file) {
             var fileReader = new FileReader();
             fileReader.onload = function() {
-              _this.onEntryTextLoaded(fileReader.result);
+              onEntryTextLoaded(fileReader.result);
               entriesProcessed++;
               if(entriesProcessed == entryCount) {
-                _this.loadPhotos(root, onComplete);
+                _this.loadPhotos(dayOneFolder, onComplete);
               }
             };
             fileReader.readAsText(file, 'UTF-8');
@@ -130,9 +130,9 @@ $(function() {
     });
   };
 
-  DayOneRenderer.prototype.loadPhotos = function(root, onComplete) {
+  DayOneRenderer.prototype.loadPhotos = function(dayOneFolder, onComplete) {
     var _this = this;
-    root.getDirectory('photos', null, function(photosDirectory) {
+    dayOneFolder.getDirectory('photos', null, function(photosDirectory) {
       var directoryReader = photosDirectory.createReader();
       var allPhotos = [];
       var processPhotos = function(photos) {
@@ -173,15 +173,8 @@ $(function() {
     $(fileSelector).hide();
     $target.show();
 
-    var template = _.template($(entryTemplateSelector).html());
-
-    this.getEntries().forEach(function(entry) {
-      setTimeout(function() {
-        var html = template({entry: entry});
-        $target.append(html);
-      }, 0);
-    });
+    DayOne.renderEntries(this.getEntries());
   };
 
-  window.dayOneRenderer = new DayOneRenderer();
+  window.DayOne.renderer = new DayOneRenderer();
 });

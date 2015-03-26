@@ -7,29 +7,60 @@
     <script type="text/javascript" src="bower_components/underscore/underscore-min.js"></script>
     <script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
     <script type="text/javascript" src="bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+    <script type="text/javascript" src="bower_components/jspdf/dist/jspdf.min.js"></script>
+    <script type="text/javascript" src="bower_components/react/react.min.js"></script>
+    <script type="text/javascript" src="bower_components/react/JSXTransformer.js"></script>
     <script type="text/javascript" src="lib/plist_parser/plist_parser.js"></script>
     <script type="text/javascript" src="lib/marked/marked.min.js"></script>
     <link type="text/css" rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="style.css" />
-    <script type="text/javascript" src="script.js"></script>
-    <script type="text/template" id="dayOneEntryTemplate">
-      <div class="row do-entry">
-        <div class="col-xs-offset-2 col-xs-8">
-          <% if(entry.hasPhoto()) { %>
-            <img class="do-entry-photo" src="<%= entry.getPhotoDataURL() %>" />
-          <% } %>
-          <div class="do-entry-text">
-            <%= entry.text() %>
-          </div>
-        </div>
-        <div class="col-xs-2">
-          <div class="do-entry-date">
-            <%= entry.creationDate() %><br/>
-            <%= entry.creationTime() %><br/>
-          </div>
-        </div>
-      </div>
+    <script type="text/javascript">
+      window.DayOne = {}
     </script>
+    <script type="text/jsx">
+      var JournalEntry = React.createClass({
+        render: function() {
+          var photoHtml = this.props.entry.hasPhoto()
+            ? <img className="do-entry-photo" src={ this.props.entry.getPhotoDataURL() } />
+            : <span/>
+          return (
+            <div className="row do-entry">
+              <div className="col-xs-offset-2 col-xs-8">
+                { photoHtml }
+                <div className="do-entry-text" dangerouslySetInnerHTML={{__html: this.props.entry.text() }} />
+              </div>
+              <div className="col-xs-2">
+                <div className="do-entry-date">
+                  <span dangerouslySetInnerHTML={{__html: this.props.entry.creationDate()}} /><br/>
+                  <span dangerouslySetInnerHTML={{__html: this.props.entry.creationTime()}} />
+                </div>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var JournalEntries = React.createClass({
+        render: function() {
+          return (
+            <div>
+              {this.props.entries.map(function(entry, i) {
+                return (
+                  <JournalEntry entry={entry} />
+                );
+              }, this)}
+            </div>
+          );
+        }
+      });
+
+      window.DayOne.renderEntries = function(entries) {
+        React.render(
+          <JournalEntries entries={entries} />,
+          document.getElementById('dayOneRenderTarget'));
+      };
+    </script>
+    <script type="text/javascript" src="script.js"></script>
   </head>
   <body>
     <div id="fileSelector">

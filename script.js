@@ -37,6 +37,10 @@ $(function() {
     return marked(this.get('Entry Text'));
   };
 
+  DayOneEntry.prototype.tags = function() {
+    return this.get('Tags');
+  };
+
   DayOneEntry.prototype.hasPhoto = function() {
     return this.photoDataURL != '';
   };
@@ -71,6 +75,12 @@ $(function() {
     return _.sortBy(_.values(this.entries), function(e) {
       return e.creationDateNumeric();
     });
+  };
+
+  DayOneRenderer.prototype.getTags = function() {
+    return _.uniq(_.flatten(_.map(this.entries, function(entry) {
+      return _.filter(entry.tags(), function(t) { return t !== undefined; });
+    }))).sort();
   };
 
   DayOneRenderer.prototype.handleFileSelect = function(files)  {
@@ -173,7 +183,7 @@ $(function() {
     $(fileSelector).hide();
     $target.show();
 
-    DayOne.renderEntries(this.getEntries());
+    DayOne.renderEntries(this.getEntries(), this.getTags());
   };
 
   window.DayOne.renderer = new DayOneRenderer();

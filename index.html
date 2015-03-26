@@ -25,11 +25,11 @@
             : <span/>
           return (
             <div className="row do-entry">
-              <div className="col-xs-offset-2 col-xs-8">
+              <div className="col-xs-10 col-md-9 col-sm-8">
                 { photoHtml }
                 <div className="do-entry-text" dangerouslySetInnerHTML={{__html: this.props.entry.text() }} />
               </div>
-              <div className="col-xs-2">
+              <div className="col-lg-2 col-md-3 col-sm-4">
                 <div className="do-entry-date">
                   <span dangerouslySetInnerHTML={{__html: this.props.entry.creationDate()}} /><br/>
                   <span dangerouslySetInnerHTML={{__html: this.props.entry.creationTime()}} />
@@ -50,13 +50,82 @@
                 );
               }, this)}
             </div>
+          )
+        }
+      });
+
+      var TagSelector = React.createClass({
+        render: function() {
+          return (
+            <div className="checkbox">
+              <label>
+                <input type="checkbox" onClick={this.props.onClick} name={this.props.tag} />
+                {this.props.tag}
+              </label>
+            </div>
           );
         }
       });
 
-      window.DayOne.renderEntries = function(entries) {
+      var TagSelectors = React.createClass({
+        onChange: function() {
+          var tags = [];
+          $('input:checked', this.getDOMNode()).each(function(i, checkbox) {
+            tags.push($(checkbox).attr('name'));
+          });
+          this.props.onChange(tags);
+        },
+        render: function() {
+          return (
+            <div>
+              <h4>Tags</h4>
+              {this.props.tags.map(function(tag, i) {
+                return (
+                  <TagSelector tag={tag} onClick={this.onChange} />
+                );
+              }, this)}
+            </div>
+          );
+        }
+      });
+
+      var JournalApp = React.createClass({
+        onTagsChanged: function(tags) {
+          if(tags.length === 0) {
+            this.setState({
+              filteredEntries: this.props.entries
+            });
+            return;
+          }
+          var filteredEntries = _.filter(this.props.entries, function(entry) {
+            return _.intersection(tags, entry.tags()).length > 0;
+          });
+          this.setState({
+            filteredEntries: filteredEntries
+          });
+        },
+        getInitialState: function() {
+          return {
+            filteredEntries: this.props.entries
+          }
+        },
+        render: function() {
+          return (
+            <div className="row">
+              <div className="col-sm-2">
+                <TagSelectors tags={this.props.tags} onChange={this.onTagsChanged} />
+              </div>
+              <div className="col-sm-10">
+                <JournalEntries entries={this.state.filteredEntries} />
+              </div>
+            </div>
+          );
+        }
+      });
+
+      window.DayOne.renderEntries = function(entries, tags) {
         React.render(
-          <JournalEntries entries={entries} />,
+          <JournalApp entries={entries} tags={tags} />,
           document.getElementById('dayOneRenderTarget'));
       };
     </script>

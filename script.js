@@ -22,15 +22,15 @@ $(function() {
   };
 
   DayOneEntry.prototype.creationDateTime = function() {
-    return moment(this.get('Creation Date')).format('MMMM Do YYYY, h:mm a');
+    return moment(this.get('Creation Date'));
   };
 
   DayOneEntry.prototype.creationDate = function() {
-    return moment(this.get('Creation Date')).format('MMMM Do YYYY');
+    return this.creationDateTime().format('MMMM Do YYYY');
   };
 
   DayOneEntry.prototype.creationTime = function() {
-    return moment(this.get('Creation Date')).format('h:mm a');
+    return this.creationDateTime().format('h:mm a');
   };
 
   DayOneEntry.prototype.text = function() {
@@ -38,7 +38,7 @@ $(function() {
   };
 
   DayOneEntry.prototype.tags = function() {
-    return this.get('Tags');
+    return _.filter(this.get('Tags'), function(t) { return t !== undefined; });
   };
 
   DayOneEntry.prototype.hasPhoto = function() {
@@ -79,7 +79,7 @@ $(function() {
 
   DayOneRenderer.prototype.getTags = function() {
     return _.uniq(_.flatten(_.map(this.entries, function(entry) {
-      return _.filter(entry.tags(), function(t) { return t !== undefined; });
+      return entry.tags();
     }))).sort();
   };
 

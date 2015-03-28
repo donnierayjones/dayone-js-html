@@ -25,14 +25,18 @@
             : <span/>
           return (
             <div className="row do-entry">
-              <div className="col-xs-10 col-md-9 col-sm-8">
+              <div className="col-lg-10 col-md-9 col-sm-8 col-xs-10">
                 { photoHtml }
                 <div className="do-entry-text" dangerouslySetInnerHTML={{__html: this.props.entry.text() }} />
               </div>
-              <div className="col-lg-2 col-md-3 col-sm-4">
+              <div className="col-lg-2 col-md-3 col-sm-4 col-xs-10">
                 <div className="do-entry-date">
-                  <span dangerouslySetInnerHTML={{__html: this.props.entry.creationDate()}} /><br/>
-                  <span dangerouslySetInnerHTML={{__html: this.props.entry.creationTime()}} />
+                  {this.props.entry.creationDate()} <br className="hidden-xs"/>
+                  {this.props.entry.creationTime()}
+                </div>
+                <hr className="hidden-print" />
+                <div className="do-entry-tags hidden-print">
+                  {this.props.entry.tags().join(', ')}
                 </div>
               </div>
             </div>
@@ -67,6 +71,46 @@
         }
       });
 
+      var DateSelector = React.createClass({
+        onChange: function() {
+          var value = $('input', this.getDOMNode()).val();
+          this.setState({
+            date: value
+          });
+          this.props.onChange();
+        },
+        getInitialState: function() {
+          return {
+            date: this.props.date
+          };
+        },
+        render: function() {
+          return (
+            <div className="form-group">
+              <label htmlFor={this.props.name}>{this.props.label}</label>
+              <input className="form-control" type="date" value={this.state.date} id={this.props.name} name={this.props.name} onChange={this.onChange} />
+            </div>
+          );
+        }
+      });
+
+      var DateSelectors = React.createClass({
+        onChange: function() {
+          var fromValue = $('input[name="from"]', this.getDOMNode()).val();
+          var toValue = $('input[name="to"]', this.getDOMNode()).val();
+          this.props.onChange(moment(fromValue), moment(toValue));
+        },
+        render: function() {
+          return (
+            <div>
+              <h4>Creation Date</h4>
+              <DateSelector name="from" label="From" date={this.props.from} onChange={this.onChange} />
+              <DateSelector name="to" label="To" date={this.props.to} onChange={this.onChange} />
+            </div>
+          );
+        }
+      });
+
       var TagSelectors = React.createClass({
         onChange: function() {
           var tags = [];
@@ -90,32 +134,60 @@
       });
 
       var JournalApp = React.createClass({
-        onTagsChanged: function(tags) {
-          if(tags.length === 0) {
-            this.setState({
-              filteredEntries: this.props.entries
-            });
-            return;
-          }
-          var filteredEntries = _.filter(this.props.entries, function(entry) {
-            return _.intersection(tags, entry.tags()).length > 0;
+        getFilteredEntries: function(criteria) {
+          var entries = this.props.entries;
+
+          entries = _.filter(entries, function(entry) {
+            return entry.creationDateTime() <= criteria.to.endOf('day').toDate() && entry.creationDateTime() >= criteria.from.startOf('day').toDate();
           });
+
+          if(criteria.tags.length > 0) {
+            entries = _.filter(entries, function(entry) {
+              return _.intersection(criteria.tags, entry.tags()).length > 0;
+            });
+          }
+
+          return entries;
+        },
+        filterEntries: function() {
           this.setState({
-            filteredEntries: filteredEntries
+            filteredEntries: this.getFilteredEntries({
+              tags: this.tags || [],
+              from: this.from,
+              to: this.to
+            })
           });
         },
+        onTagsChanged: function(tags) {
+          this.tags = tags;
+          this.filterEntries();
+        },
+        onDateChanged: function(from, to) {
+          this.from = from;
+          this.to = to;
+          this.filterEntries();
+        },
         getInitialState: function() {
+          var defaults = {
+            from: moment().subtract(1, 'months'),
+            to: moment(),
+            tags: []
+          };
           return {
-            filteredEntries: this.props.entries
+            from: defaults.from,
+            to: defaults.to,
+            tags: [],
+            filteredEntries: this.getFilteredEntries(defaults)
           }
         },
         render: function() {
           return (
             <div className="row">
-              <div className="col-sm-2">
+              <div className="col-xs-2 col-sm-2 invisible-print">
+                <DateSelectors from={this.state.from.format('YYYY-MM-DD')} to={this.state.to.format('YYYY-MM-DD')} onChange={this.onDateChanged} />
                 <TagSelectors tags={this.props.tags} onChange={this.onTagsChanged} />
               </div>
-              <div className="col-sm-10">
+              <div className="col-xs-10 col-sm-10">
                 <JournalEntries entries={this.state.filteredEntries} />
               </div>
             </div>

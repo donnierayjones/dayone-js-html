@@ -150,11 +150,12 @@
           return entries;
         },
         filterEntries: function() {
+          var defaults = this.getDefaults();
           this.setState({
             filteredEntries: this.getFilteredEntries({
-              tags: this.tags || [],
-              from: this.from,
-              to: this.to
+              tags: this.tags || defaults.tags,
+              from: this.from || defaults.from,
+              to: this.to || defaults.to
             })
           });
         },
@@ -167,16 +168,19 @@
           this.to = to;
           this.filterEntries();
         },
-        getInitialState: function() {
-          var defaults = {
+        getDefaults: function() {
+          return {
             from: moment().subtract(1, 'months'),
             to: moment(),
             tags: []
           };
+        },
+        getInitialState: function() {
+          var defaults = this.getDefaults();
           return {
             from: defaults.from,
             to: defaults.to,
-            tags: [],
+            tags: defaults.tags,
             filteredEntries: this.getFilteredEntries(defaults)
           }
         },

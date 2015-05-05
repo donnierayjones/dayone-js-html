@@ -48,6 +48,15 @@
   padding-top: 1em;
 }
 
+.do-entry-photo-loading {
+  border: 1px solid #eee;
+  background-color: #efefef;
+  color: #555;
+  width: 100%;
+  padding: 10%;
+  text-align: center;
+}
+
 .do-entry-text p:first-child {
   margin-top: 0;
 }

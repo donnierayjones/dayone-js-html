@@ -13,15 +13,58 @@
     <script type="text/javascript" src="lib/plist_parser/plist_parser.js"></script>
     <script type="text/javascript" src="lib/marked/marked.min.js"></script>
     <link type="text/css" rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="style.css" />
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
     <script type="text/javascript">
       window.DayOne = {}
     </script>
     <script type="text/jsx">
+      var JournalPhoto = React.createClass({
+        getShrinkedImage: function(entry) {
+          var _this = this;
+          if(entry.hasShrinkedPhoto() === false) {
+            entry.shrinkPhoto(function() {
+              _this.setState({
+                loaded: true,
+                dataURL: entry.getShrinkedPhotoDataURL()
+              });
+            });
+          }
+          else
+          {
+            this.setState({
+              loaded: true,
+              dataURL: entry.getShrinkedPhotoDataURL()
+            });
+          }
+        },
+        componentDidMount: function() {
+          this.getShrinkedImage(this.props.entry);
+        },
+        componentWillReceiveProps: function(nextProps) {
+          if(nextProps.entry != this.props.entry) {
+            this.replaceState(this.getInitialState());
+            this.getShrinkedImage(nextProps.entry);
+          }
+        },
+        getInitialState: function() {
+          return {
+            loaded: false,
+            dataURL: ''
+          };
+        },
+        render: function() {
+          return (
+            this.state.loaded === true
+              ? <img className="do-entry-photo" src={this.state.dataURL} />
+              : <div className="do-entry-photo do-entry-photo-loading">Loading ...</div>
+          );
+        }
+      });
+
       var JournalEntry = React.createClass({
         render: function() {
           var photoHtml = this.props.entry.hasPhoto()
-            ? <img className="do-entry-photo" src={ this.props.entry.getPhotoDataURL() } />
+            ? <JournalPhoto entry={this.props.entry} />
             : <span/>
           return (
             <div className="row do-entry">
@@ -205,7 +248,7 @@
           document.getElementById('dayOneRenderTarget'));
       };
     </script>
-    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
   </head>
   <body>
     <div id="fileSelector">

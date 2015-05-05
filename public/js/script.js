@@ -7,6 +7,7 @@ $(function() {
   var DayOneEntry = function(plistData) {
     this.data = plistData;
     this.photoDataURL = '';
+    this.shrinkedPhotoDataURL = '';
   };
 
   DayOneEntry.prototype.get = function(key) {
@@ -45,6 +46,10 @@ $(function() {
     return this.photoDataURL != '';
   };
 
+  DayOneEntry.prototype.hasShrinkedPhoto = function() {
+    return this.shrinkedPhotoDataURL != '';
+  };
+
   DayOneEntry.prototype.setPhotoDataURL = function(dataURL) {
     this.photoDataURL = dataURL;
   };
@@ -52,6 +57,47 @@ $(function() {
   DayOneEntry.prototype.getPhotoDataURL = function() {
     return this.photoDataURL;
   };
+
+  DayOneEntry.prototype.getShrinkedPhotoDataURL = function() {
+    return this.shrinkedPhotoDataURL;
+  };
+
+  DayOneEntry.prototype.shrinkPhoto = function(callback) {
+    var img = document.createElement("img");
+    var _this = this;
+
+    if(this.hasShrinkedPhoto()) {
+        callback(this.getShrinkedPhotoDataURL());
+        return;
+    }
+
+    img.src = this.photoDataURL;
+    img.onload = function() {
+      var maxWidth = 1024;
+      var canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      var width = img.width;
+      var height = img.height;
+
+      if (width > maxWidth) {
+        height *= maxWidth / width;
+        width = maxWidth;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+
+      _this.shrinkedPhotoDataURL = canvas.toDataURL("image/jpeg");
+      callback(_this.shrinkedPhotoDataURL);
+    };
+  }
 
   var DayOneRenderer = function() {
     var _this = this;

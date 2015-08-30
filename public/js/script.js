@@ -73,7 +73,8 @@ $(function() {
 
     img.src = this.photoDataURL;
     img.onload = function() {
-      var maxWidth = 1024;
+      // https://support.apple.com/en-us/HT201495
+      var maxWidth = 3338;
       var canvas = document.createElement("canvas");
       canvas.width = img.width;
       canvas.height = img.height;

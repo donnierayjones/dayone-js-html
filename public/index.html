@@ -12,6 +12,7 @@
     <script type="text/javascript" src="bower_components/react/JSXTransformer.js"></script>
     <script type="text/javascript" src="lib/plist_parser/plist_parser.js"></script>
     <script type="text/javascript" src="lib/marked/marked.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Nunito:300,400,700' rel='stylesheet' type='text/css'>
     <link type="text/css" rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="css/style.css" />
     <script type="text/javascript">
@@ -70,11 +71,15 @@
             <div className="row do-entry">
               <div className="col-lg-10 col-md-9 col-sm-8 col-xs-10">
                 { photoHtml }
+                <div className="do-entry-date visible-print">
+                  {this.props.entry.creationDate()}
+                  {this.props.entry.creationTime()}
+                </div>
                 <div className="do-entry-text" dangerouslySetInnerHTML={{__html: this.props.entry.text() }} />
               </div>
-              <div className="col-lg-2 col-md-3 col-sm-4 col-xs-10">
+              <div className="col-lg-2 col-md-3 col-sm-4 col-xs-10 hidden-print">
                 <div className="do-entry-date">
-                  {this.props.entry.creationDate()} <br className="hidden-xs"/>
+                  {this.props.entry.creationDate()} <br className="hidden-print"/>
                   {this.props.entry.creationTime()}
                 </div>
                 <hr className="hidden-print" />

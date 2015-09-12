@@ -1,4 +1,9 @@
 
+body {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 300;
+}
+
 #dragAndDrop {
   min-height: 300px;
   border: 5px dotted rgb(39, 132, 176);
@@ -34,14 +39,16 @@
 }
 
 .do-entry-date {
-  font-size: 0.8em;
-  color: #999;
+  margin-bottom: 2em;
+  font-size: 0.7em;
+  text-transform: uppercase;
+  color:#399FC3;
 }
 
 .do-entry-photo {
   display: block;
   max-width: 100%;
-  margin: 0 auto;
+  margin: 0 auto 2em;
 }
 
 .do-entry-photo + .do-entry-text {
@@ -61,14 +68,14 @@
   margin-top: 0;
 }
 
-.do-entry-text > p:first-child:first-line {
-  font-size: 1.3em;
-  line-height: 1.5em;
+.do-entry-text p:first-child:not(:only-child) {
+  font-size: 1.2em;
+  font-weight: 400;
 }
 
 .do-entry-tags {
   font-size: 0.8em;
-  color: rgb(39, 132, 176);
+  color:#399FC3;
 }
 
 @media print {

@@ -13,7 +13,7 @@
     <script type="text/javascript" src="lib/plist_parser/plist_parser.js"></script>
     <script type="text/javascript" src="lib/marked/marked.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Nunito:300,400,700' rel='stylesheet' type='text/css'>
-    <link type="text/css" rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link type="text/css" rel="stylesheet" href="css/style.css" />
     <script type="text/javascript">
       window.DayOne = {}
@@ -69,21 +69,19 @@
             : <span/>
           return (
             <div className="row do-entry">
-              <div className="col-lg-10 col-md-9 col-sm-8 col-xs-10">
+              <div className="col-lg-10 col-md-9 col-sm-8 col-xs-12">
                 { photoHtml }
-                <div className="do-entry-date visible-print">
-                  {this.props.entry.creationDate()}
-                  {this.props.entry.creationTime()}
+                <div className="do-entry-date visible-xs">
+                  {this.props.entry.creationDate()}{' '}{this.props.entry.creationTime()}
                 </div>
                 <div className="do-entry-text" dangerouslySetInnerHTML={{__html: this.props.entry.text() }} />
               </div>
-              <div className="col-lg-2 col-md-3 col-sm-4 col-xs-10 hidden-print">
+              <div className="col-lg-2 col-md-3 col-sm-4 hidden-xs">
                 <div className="do-entry-date">
-                  {this.props.entry.creationDate()} <br className="hidden-print"/>
+                  {this.props.entry.creationDate()}<br/>
                   {this.props.entry.creationTime()}
                 </div>
-                <hr className="hidden-print" />
-                <div className="do-entry-tags hidden-print">
+                <div className="do-entry-tags">
                   {this.props.entry.tags().join(', ')}
                 </div>
               </div>
@@ -235,11 +233,11 @@
         render: function() {
           return (
             <div className="row">
-              <div className="col-xs-2 col-sm-2 invisible-print">
+              <div className="col-sm-2 hidden-xs">
                 <DateSelectors from={this.state.from.format('YYYY-MM-DD')} to={this.state.to.format('YYYY-MM-DD')} onChange={this.onDateChanged} />
                 <TagSelectors tags={this.props.tags} onChange={this.onTagsChanged} />
               </div>
-              <div className="col-xs-10 col-sm-10">
+              <div className="col-sm-10 col-xs-12">
                 <JournalEntries entries={this.state.filteredEntries} />
               </div>
             </div>

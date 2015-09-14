@@ -200,7 +200,14 @@ $(function() {
 
             var dataURL = URL.createObjectURL(file);
             var entry = _this.entries[fileName];
-            entry.setPhotoDataURL(dataURL);
+
+            if(entry === undefined) {
+              console.log(fileName + ' is not in the entries list.');
+              console.log('entry count: ' + Object.keys(_this.entries).length);
+            }
+            else{
+              entry.setPhotoDataURL(dataURL);
+            }
 
             photosProcessed++;
 

@@ -23,7 +23,7 @@ $(function() {
   };
 
   DayOneEntry.prototype.creationDateTime = function() {
-    return moment(this.get('Creation Date'));
+    return moment(new Date(this.get('Creation Date')));
   };
 
   DayOneEntry.prototype.creationDate = function() {
@@ -73,8 +73,7 @@ $(function() {
 
     img.src = this.photoDataURL;
     img.onload = function() {
-      // https://support.apple.com/en-us/HT201495
-      var maxWidth = 3338;
+      var maxWidth = 2048; // Any higher than this seems to render black images sometimes?
       var canvas = document.createElement("canvas");
       canvas.width = img.width;
       canvas.height = img.height;

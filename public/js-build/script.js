@@ -131,14 +131,32 @@ $(function () {
     }))).sort();
   };
 
+  DayOneRenderer.prototype.showInvalidFileAlert = function () {
+    $('.js-invalid-dayone-file-alert').removeClass('hidden');
+  };
+
+  DayOneRenderer.prototype.hideInvalidFileAlert = function () {
+    $('.js-invalid-dayone-file-alert').addClass('hidden');
+  };
+
   DayOneRenderer.prototype.handleFileSelect = function (files) {
     var _this = this;
 
+    this.hideInvalidFileAlert();
+
     if (files.length === 0) {
+      this.showInvalidFileAlert();
       return;
     };
 
     var dayOneFolder = files[0].webkitGetAsEntry();
+
+    if (dayOneFolder.isDirectory === false || dayOneFolder.name.endsWith('.dayone') === false) {
+      setTimeout(function () {
+        _this.showInvalidFileAlert();
+      }, 100);
+      return;
+    }
 
     this.loadEntries(dayOneFolder, function () {
       _this.render();

@@ -1,6 +1,6 @@
 $(function () {
   var fileSelector = '#fileSelector';
-  var dragAndDropSelector = '#dragAndDrop';
+  var dragAndDropSelector = 'body';
   var renderTargetSelector = '#dayOneRenderTarget';
   var entryTemplateSelector = '#dayOneEntryTemplate';
 

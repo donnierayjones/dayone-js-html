@@ -83,19 +83,6 @@ var JournalEntries = React.createClass({
   }
 });
 
-var TagSelector = React.createClass({
-  render: function() {
-    return (
-      <div className="checkbox">
-      <label>
-      <input type="checkbox" onClick={this.props.onClick} name={this.props.tag} />
-      {this.props.tag}
-      </label>
-      </div>
-    );
-  }
-});
-
 var DateSelector = React.createClass({
   onChange: function() {
     var value = $('input', this.getDOMNode()).val();
@@ -136,23 +123,72 @@ var DateSelectors = React.createClass({
   }
 });
 
+var TagSelector = React.createClass({
+  onClick: function() {
+    this.setState({
+      value: $('input:checked', this.getDOMNode()).val()
+    });
+    this.props.onClick();
+  },
+  getInitialState: function() {
+    return {
+      value: ""
+    };
+  },
+  render: function() {
+    return (
+      <tr>
+        <td>
+          {this.props.tagName}
+        </td>
+        <td className="text-center">
+          <input type="radio" onClick={this.onClick} name={this.props.tagName} value="" checked={this.state.value == ""} />
+        </td>
+        <td className="text-center">
+          <input type="radio" onClick={this.onClick} name={this.props.tagName} value="include" checked={this.state.value == "include"} />
+        </td>
+        <td className="text-center">
+          <input type="radio" onClick={this.onClick} name={this.props.tagName} value="exclude" checked={this.state.value == "exclude"} />
+        </td>
+      </tr>
+    );
+  }
+});
+
 var TagSelectors = React.createClass({
   onChange: function() {
-    var tags = [];
-    $('input:checked', this.getDOMNode()).each(function(i, checkbox) {
-      tags.push($(checkbox).attr('name'));
+    var includeTags = [];
+    var excludeTags = [];
+    $('input:checked', this.getDOMNode()).each(function(i, radio) {
+      if($(radio).val() == "include") {
+        includeTags.push($(radio).attr('name'));
+      }
+      if($(radio).val() == "exclude") {
+        excludeTags.push($(radio).attr('name'));
+      }
     });
-    this.props.onChange(tags);
+    this.props.onChange(includeTags, excludeTags);
   },
   render: function() {
     return (
       <div>
-      <h4>Tags</h4>
-      {this.props.tags.map(function(tag, i) {
-        return (
-          <TagSelector tag={tag} onClick={this.onChange} />
-        );
-      }, this)}
+        <table className="table table-condensed">
+        <thead>
+          <tr>
+            <th>Tag</th>
+            <th className="text-center">-</th>
+            <th className="text-center text-success">{String.fromCharCode(10004)}</th>
+            <th className="text-center text-danger">{String.fromCharCode(10008)}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.props.tags.map(function(tag, i) {
+            return (
+              <TagSelector tagName={tag} onClick={this.onChange} />
+            );
+          }, this)}
+        </tbody>
+        </table>
       </div>
     );
   }
@@ -166,9 +202,15 @@ var JournalApp = React.createClass({
       return entry.creationDateTime() <= criteria.to.endOf('day').toDate() && entry.creationDateTime() >= criteria.from.startOf('day').toDate();
     });
 
-    if(criteria.tags.length > 0) {
+    if(criteria.includeTags.length > 0) {
       entries = _.filter(entries, function(entry) {
-        return _.intersection(criteria.tags, entry.tags()).length > 0;
+        return _.intersection(criteria.includeTags, entry.tags()).length > 0;
+      });
+    }
+
+    if(criteria.excludeTags.length > 0) {
+      entries = _.filter(entries, function(entry) {
+        return _.intersection(criteria.excludeTags, entry.tags()).length <= 0;
       });
     }
 
@@ -178,14 +220,16 @@ var JournalApp = React.createClass({
     var defaults = this.getDefaults();
     this.setState({
       filteredEntries: this.getFilteredEntries({
-        tags: this.tags || defaults.tags,
+        includeTags: this.includeTags || defaults.includeTags,
+        excludeTags: this.excludeTags || defaults.excludeTags,
         from: this.from || defaults.from,
         to: this.to || defaults.to
       })
     });
   },
-  onTagsChanged: function(tags) {
-    this.tags = tags;
+  onTagsChanged: function(includeTags, excludeTags) {
+    this.includeTags = includeTags;
+    this.excludeTags = excludeTags;
     this.filterEntries();
   },
   onDateChanged: function(from, to) {
@@ -197,6 +241,8 @@ var JournalApp = React.createClass({
     return {
       from: moment().subtract(1, 'months'),
       to: moment(),
+      includeTags: [],
+      excludeTags: [],
       tags: []
     };
   },
@@ -206,6 +252,8 @@ var JournalApp = React.createClass({
       from: defaults.from,
       to: defaults.to,
       tags: defaults.tags,
+      includeTags: defaults.includeTags,
+      excludeTags: defaults.excludeTags,
       filteredEntries: this.getFilteredEntries(defaults)
     }
   },

@@ -211,6 +211,9 @@ $(function () {
       var allPhotos = [];
       var processPhotos = function (photos) {
         var photosProcessed = 0;
+        if (photos.length === 0) {
+          onComplete();
+        }
         photos.forEach(function (photo) {
           photo.file(function (file) {
             var fileName = file.name.substring(0, 32);

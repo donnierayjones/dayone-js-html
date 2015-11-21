@@ -39,7 +39,8 @@ gem for rackup. So:
 1. `bundle install`
 2. `bundle exec rackup`
 
-Should be all you need.
+Should be all you need to run it as-is. If you're wanting to make
+changes to the scripts, see the [React.js Getting Started Guide][6].
 
 ## Example PDF Screenshot
 
@@ -53,3 +54,4 @@ print preferences on a mac.
 [3]: https://twitter.com/hidrj
 [4]: https://dl.dropboxusercontent.com/u/51737/images/projects/dayone-to-html/app-screenshot.png
 [5]: https://dl.dropboxusercontent.com/u/51737/images/projects/dayone-to-html/pdf-example.png
+[6]: https://facebook.github.io/react/docs/getting-started.html#offline-transform

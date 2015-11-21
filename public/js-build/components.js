@@ -321,6 +321,7 @@ var JournalApp = React.createClass({
   }
 });
 
-window.DayOne.renderEntries = function (entries, tags) {
+window.DayOne = {};
+window.DayOne.reactRender = function (entries, tags) {
   ReactDOM.render(React.createElement(JournalApp, { entries: entries, tags: tags }), document.getElementById('dayOneRenderTarget'));
 };

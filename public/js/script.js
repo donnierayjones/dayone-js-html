@@ -1,9 +1,4 @@
 $(function() {
-  var fileSelector = '#fileSelector';
-  var dragAndDropSelector = 'body';
-  var renderTargetSelector = '#dayOneRenderTarget';
-  var entryTemplateSelector = '#dayOneEntryTemplate';
-
   var DayOneEntry = function(plistData) {
     this.data = plistData;
     this.photoDataURL = '';
@@ -99,11 +94,17 @@ $(function() {
     };
   }
 
-  var DayOneRenderer = function() {
-    var _this = this;
+  var DayOneRenderer = function(opt) {
+    opt = opt || {};
     this.entries = {};
+    this.fileSelector = opt.fileSelector || '#fileSelector';
+    this.dragAndDropSelector = opt.dragAndDropSelector || 'body';
+    this.renderTargetSelector = opt.renderTargetSelector || '#dayOneRenderTarget';
+  };
 
-    $(dragAndDropSelector).on('drop', function(e) {
+  DayOneRenderer.prototype.init = function() {
+    var _this = this;
+    $(this.dragAndDropSelector).on('drop', function(e) {
       e.stopPropagation();
       e.preventDefault();
       _this.handleFileSelect(e.originalEvent.dataTransfer.items);
@@ -253,12 +254,17 @@ $(function() {
   };
 
   DayOneRenderer.prototype.render = function() {
-    var $target = $(renderTargetSelector);
-    $(fileSelector).hide();
+    var $target = $(this.renderTargetSelector);
+    $(this.fileSelector).hide();
     $target.show();
 
-    DayOne.renderEntries(this.getEntries(), this.getTags());
+    window.DayOne.reactRender(this.getEntries(), this.getTags());
   };
 
-  window.DayOne.renderer = new DayOneRenderer();
+  var renderer = new DayOneRenderer({
+    fileSelector: '#fileSelector',
+    dragAndDropSelector: 'body',
+    renderTargetSelector: '#dayOneRenderTarget'
+  });
+  renderer.init();
 });

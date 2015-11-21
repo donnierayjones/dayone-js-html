@@ -49,21 +49,20 @@ var JournalEntry = React.createClass({
     return (
       <div className="row do-entry">
       <div className="col-lg-10 col-md-9 col-sm-8 col-xs-12">
-      { photoHtml }
+        { photoHtml }
       <div className="do-entry-date visible-xs">
-      {this.props.entry.creationDate()}{' '}{this.props.entry.creationTime()}
+        {this.props.entry.creationDate()}{' '}{this.props.entry.creationTime()}
       </div>
-      <div className="do-entry-text" dangerouslySetInnerHTML={{__html: this.props.entry.text() }} />
-      </div>
-      <div className="col-lg-2 col-md-3 col-sm-4 hidden-xs">
-      <div className="do-entry-date">
-      {this.props.entry.creationDate()}<br/>
-      {this.props.entry.creationTime()}
-      </div>
-      <div className="do-entry-tags">
-      {this.props.entry.tags().join(', ')}
-      </div>
-      </div>
+      <div className="do-entry-text" dangerouslySetInnerHTML={{__html: this.props.entry.text() }} /></div>
+        <div className="col-lg-2 col-md-3 col-sm-4 hidden-xs">
+          <div className="do-entry-date">
+            {this.props.entry.creationDate()}<br/>
+            {this.props.entry.creationTime()}
+          </div>
+          <div className="do-entry-tags">
+            {this.props.entry.tags().join(', ')}
+          </div>
+        </div>
       </div>
     );
   }
@@ -99,8 +98,8 @@ var DateSelector = React.createClass({
   render: function() {
     return (
       <div className="form-group">
-      <label htmlFor={this.props.name}>{this.props.label}</label>
-      <input className="form-control" type="date" value={this.state.date} id={this.props.name} name={this.props.name} onChange={this.onChange} />
+        <label htmlFor={this.props.name}>{this.props.label}</label>
+        <input className="form-control" type="date" value={this.state.date} id={this.props.name} name={this.props.name} onChange={this.onChange} />
       </div>
     );
   }
@@ -115,9 +114,9 @@ var DateSelectors = React.createClass({
   render: function() {
     return (
       <div>
-      <h4>Creation Date</h4>
-      <DateSelector name="from" label="From" date={this.props.from} onChange={this.onChange} />
-      <DateSelector name="to" label="To" date={this.props.to} onChange={this.onChange} />
+        <h4>Creation Date</h4>
+        <DateSelector name="from" label="From" date={this.props.from} onChange={this.onChange} />
+        <DateSelector name="to" label="To" date={this.props.to} onChange={this.onChange} />
       </div>
     );
   }
@@ -272,7 +271,8 @@ var JournalApp = React.createClass({
   }
 });
 
-window.DayOne.renderEntries = function(entries, tags) {
+window.DayOne = {};
+window.DayOne.reactRender = function(entries, tags) {
   ReactDOM.render(
     <JournalApp entries={entries} tags={tags} />,
     document.getElementById('dayOneRenderTarget'));

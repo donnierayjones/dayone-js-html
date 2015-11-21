@@ -15,46 +15,61 @@
     <link href='https://fonts.googleapis.com/css?family=Nunito:300,400,700' rel='stylesheet' type='text/css'>
     <link type="text/css" rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link type="text/css" rel="stylesheet" href="css/style.css" />
-    <script type="text/javascript">
-      window.DayOne = {};
-    </script>
     <script src="js-build/components.js"></script>
     <script src="js-build/script.js"></script>
   </head>
   <body>
     <div id="fileSelector">
-      <div class="jumbotron bg-dayone" style="margin-bottom:0;">
+      <a href="https://github.com/donnierayjones/dayone-js-html"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
+      <div class="jumbotron bg-dayone">
         <div class="container">
           <div class="text-center">
-            <h1>Day One to HTML</h1>
+            <h1>Day One to HTML <small>(to PDF)</small></h1>
           </div>
         </div>
       </div>
       <div class="jumbotron">
         <div class="container">
-          <div class="pull-left">
-            <p class="pull-left">
-              If this works well for you and you'd like to support my efforts
-              please donate.
-            </p>
-            <p>
-              For feature requests, contact me on <a target="_blank" href="https://twitter.com/hidrj">Twitter</a> or <a href='http://www.google.com/recaptcha/mailhide/d?k=01uPW8HTG3irNRc9UF0KqEfA==&amp;amp;c=F6AENppotMVxyW5K2MWSsZhkMKJQY82RTrCOc850CRE=' onclick="window.open('http://www.google.com/recaptcha/mailhide/d?k=01uPW8HTG3irNRc9UF0KqEfA==&amp;c=F6AENppotMVxyW5K2MWSsZhkMKJQY82RTrCOc850CRE=', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title='Reveal this e-mail address'>Email</a>.
-            </p>
+          <div class="row">
+            <div class="col-sm-6">
+              <h2>What's this?</h2>
+              <p>
+              Want a physical book from your <a target="_blank"
+                href="http://dayoneapp.com/">Day One</a> journal entries? With
+              this web app you can filter through your entries and then print
+              using the browser print feature.
+              </p>
+            </div>
+            <div class="col-sm-6">
+              <h2>Issues and Feature Requests</h2>
+              <p>
+                Contact me on <a target="_blank" href="https://twitter.com/hidrj">Twitter</a>, <a href='http://www.google.com/recaptcha/mailhide/d?k=01uPW8HTG3irNRc9UF0KqEfA==&amp;amp;c=F6AENppotMVxyW5K2MWSsZhkMKJQY82RTrCOc850CRE=' onclick="window.open('http://www.google.com/recaptcha/mailhide/d?k=01uPW8HTG3irNRc9UF0KqEfA==&amp;c=F6AENppotMVxyW5K2MWSsZhkMKJQY82RTrCOc850CRE=', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title='Reveal this e-mail address'>Email</a>, or <a href="https://github.com/donnierayjones/dayone-js-html/issues" target="_blank">Github</a>.
+              </p>
+            </div>
           </div>
-          <div class="pull-right text-center">
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-              <input type="hidden" name="cmd" value="_s-xclick">
-              <input type="hidden" name="hosted_button_id" value="PDVLX9UES2M5G">
-              <button class="btn btn-success btn-lg" type="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" style="padding:20px 60px; font-size: 22px;">Donate</button>
-            </form>
+          <div class="row">
+            <div class="col-sm-6">
+              <h3>Steps</h3>
+              <p>
+              1. Drag-and-Drop your Journal file onto this page
+              <br/>
+              2. Filter your entries by date and tag
+              <br/>
+              3. Print to PDF
+              </p>
+            </div>
+            <div class="col-sm-6">
+              <h3>Donations</h2>
+              <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                <p>
+                  If this works well for you and you'd like to donate...
+                  <input type="hidden" name="cmd" value="_s-xclick">
+                  <input type="hidden" name="hosted_button_id" value="PDVLX9UES2M5G">
+                  <button class="btn btn-success btn-sm" type="submit" name="submit">Donate</button>
+                </p>
+              </form>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="jumbotron hidden js-chrome-required">
-        <div class="container">
-          <h2 class="text-danger text-center">
-            <a class="text-danger" href="https://www.google.com/chrome"><u>Google Chrome</u></a> is required :(
-          </h2>
         </div>
       </div>
       <div class="margin-bottom-none">
@@ -72,6 +87,13 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="jumbotron hidden js-chrome-required">
+        <div class="container">
+          <h2 class="text-danger text-center">
+            <a class="text-danger" href="https://www.google.com/chrome"><u>Google Chrome</u></a> is required :(
+          </h2>
         </div>
       </div>
     </div>

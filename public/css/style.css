@@ -17,11 +17,15 @@
   color: #fff;
 }
 
+.bg-dayone small {
+  color: #fff;
+}
+
 .text-dayone {
   color: rgb(39, 132, 176);
 }
 
-.margin-bottom-none {
+.jumbotron, .margin-bottom-none {
   margin-bottom: 0;
 }
 

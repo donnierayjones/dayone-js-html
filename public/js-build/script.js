@@ -102,6 +102,10 @@ $(function () {
     this.fileSelector = opt.fileSelector || '#fileSelector';
     this.dragAndDropSelector = opt.dragAndDropSelector || 'body';
     this.renderTargetSelector = opt.renderTargetSelector || '#dayOneRenderTarget';
+
+    this.$progressContainer = $('.js-progress');
+    this.$progressBar = $('.js-progress-bar');
+    this.$progressBarTitle = $('.js-progress-title');
   };
 
   DayOneRenderer.prototype.init = function () {
@@ -142,6 +146,7 @@ $(function () {
 
   DayOneRenderer.prototype.handleFileSelect = function (files) {
     var _this = this;
+    this.entries = {};
 
     this.hideInvalidFileAlert();
 
@@ -159,12 +164,34 @@ $(function () {
       return;
     }
 
+    this.showProgress();
+
     this.loadEntries(dayOneFolder, function () {
+      _this.hideProgress();
       _this.render();
+    }, function (progressText, progressPercent) {
+      _this.setProgress(progressText, progressPercent);
     });
   };
 
-  DayOneRenderer.prototype.loadEntries = function (dayOneFolder, onComplete) {
+  DayOneRenderer.prototype.showProgress = function () {
+    this.$progressContainer.removeClass('hidden');
+    this.setProgress('Loading...', 0);
+  };
+
+  DayOneRenderer.prototype.hideProgress = function () {
+    this.$progressContainer.addClass('hidden');
+    this.setProgress('', 0);
+  };
+
+  DayOneRenderer.prototype.setProgress = function (title, percent) {
+    //console.log(title, percent);
+    this.$progressBarTitle.text(title);
+    $('span', this.$progressBar).text(percent + '% Complete');
+    this.$progressBar.css('width', percent + '%');
+  };
+
+  DayOneRenderer.prototype.loadEntries = function (dayOneFolder, onComplete, onProgress) {
     var _this = this;
     dayOneFolder.getDirectory('entries', null, function (entriesDirectory) {
       var directoryReader = entriesDirectory.createReader();
@@ -183,11 +210,14 @@ $(function () {
             fileReader.onload = function () {
               onEntryTextLoaded(fileReader.result);
               entriesProcessed++;
+              onProgress('Loading entries...', Math.round(entriesProcessed * 100 / entryCount));
               if (entriesProcessed == entryCount) {
-                _this.loadPhotos(dayOneFolder, onComplete);
+                _this.loadPhotos(dayOneFolder, onComplete, onProgress);
               }
             };
-            fileReader.readAsText(file, 'UTF-8');
+            setTimeout(function () {
+              fileReader.readAsText(file, 'UTF-8');
+            }, Math.random() * 10 * allEntries.length);
           });
         });
       };
@@ -205,7 +235,7 @@ $(function () {
     });
   };
 
-  DayOneRenderer.prototype.loadPhotos = function (dayOneFolder, onComplete) {
+  DayOneRenderer.prototype.loadPhotos = function (dayOneFolder, onComplete, onProgress) {
     var _this = this;
     dayOneFolder.getDirectory('photos', null, function (photosDirectory) {
       var directoryReader = photosDirectory.createReader();
@@ -230,6 +260,8 @@ $(function () {
             }
 
             photosProcessed++;
+
+            onProgress('Loading photos...', Math.round(photosProcessed * 100 / photos.length));
 
             if (photosProcessed === photos.length) {
               onComplete();
@@ -259,10 +291,10 @@ $(function () {
     window.DayOne.reactRender(this.getEntries(), this.getTags());
   };
 
-  var renderer = new DayOneRenderer({
+  window.DayOne.renderer = new DayOneRenderer({
     fileSelector: '#fileSelector',
     dragAndDropSelector: 'body',
     renderTargetSelector: '#dayOneRenderTarget'
   });
-  renderer.init();
+  window.DayOne.renderer.init();
 });

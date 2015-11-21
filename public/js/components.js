@@ -1,42 +1,7 @@
 var JournalPhoto = React.createClass({
-  getShrinkedImage: function(entry) {
-    var _this = this;
-    if(entry.hasShrinkedPhoto() === false) {
-      entry.shrinkPhoto(function() {
-        _this.setState({
-          loaded: true,
-          dataURL: entry.getShrinkedPhotoDataURL()
-        });
-      });
-    }
-    else
-      {
-        this.setState({
-          loaded: true,
-          dataURL: entry.getShrinkedPhotoDataURL()
-        });
-      }
-  },
-  componentDidMount: function() {
-    this.getShrinkedImage(this.props.entry);
-  },
-  componentWillReceiveProps: function(nextProps) {
-    if(nextProps.entry != this.props.entry) {
-      this.replaceState(this.getInitialState());
-      this.getShrinkedImage(nextProps.entry);
-    }
-  },
-  getInitialState: function() {
-    return {
-      loaded: false,
-      dataURL: ''
-    };
-  },
   render: function() {
     return (
-      this.state.loaded === true
-      ? <img className="do-entry-photo" src={this.state.dataURL} />
-      : <div className="do-entry-photo do-entry-photo-loading">Loading ...</div>
+      <img className="do-entry-photo" src={this.props.entry.getShrinkedPhotoDataURL()} />
     );
   }
 });
@@ -84,11 +49,20 @@ var JournalEntries = React.createClass({
 
 var DateSelector = React.createClass({
   onChange: function() {
-    var value = $('input', this.getDOMNode()).val();
+    var _this = this;
+
+    var value = $('input', _this.getDOMNode()).val();
     this.setState({
       date: value
     });
-    this.props.onChange();
+
+    if(this.changeTimeout) {
+      clearTimeout(this.changeTimeout);
+    }
+
+    this.changeTimeout = setTimeout(function() {
+      _this.props.onChange();
+    }, 200);
   },
   getInitialState: function() {
     return {
@@ -194,7 +168,7 @@ var TagSelectors = React.createClass({
 });
 
 var JournalApp = React.createClass({
-  getFilteredEntries: function(criteria) {
+  getFilteredEntries: function(criteria, callback) {
     var entries = this.props.entries;
 
     entries = _.filter(entries, function(entry) {
@@ -213,17 +187,44 @@ var JournalApp = React.createClass({
       });
     }
 
+    var entriesProcessed = 0;
+
+    var unloadedPhotoEntries = _.filter(entries, function(entry) {
+      return entry.hasPhoto() && entry.hasShrinkedPhoto() === false;
+    })
+
+    if(unloadedPhotoEntries.length > 0) {
+      window.DayOne.renderer.showProgress();
+      _.each(unloadedPhotoEntries, function(entry) {
+          setTimeout(function() {
+            entry.shrinkPhoto(function() {
+              entriesProcessed++;
+              window.DayOne.renderer.setProgress('Shrinking photos...', Math.round(entriesProcessed * 100 / unloadedPhotoEntries.length));
+              if(entriesProcessed == unloadedPhotoEntries.length) {
+                window.DayOne.renderer.hideProgress();
+                callback(entries);
+              }
+            });
+          }, Math.random() * 500 * unloadedPhotoEntries.length);
+      });
+    } else {
+      callback(entries);
+    }
+
     return entries;
   },
   filterEntries: function() {
+    var _this = this;
     var defaults = this.getDefaults();
-    this.setState({
-      filteredEntries: this.getFilteredEntries({
-        includeTags: this.includeTags || defaults.includeTags,
-        excludeTags: this.excludeTags || defaults.excludeTags,
-        from: this.from || defaults.from,
-        to: this.to || defaults.to
-      })
+    this.getFilteredEntries({
+      includeTags: this.includeTags || defaults.includeTags,
+      excludeTags: this.excludeTags || defaults.excludeTags,
+      from: this.from || defaults.from,
+      to: this.to || defaults.to
+    }, function(entries) {
+      _this.setState({
+        filteredEntries: entries
+      });
     });
   },
   onTagsChanged: function(includeTags, excludeTags) {
@@ -245,6 +246,14 @@ var JournalApp = React.createClass({
       tags: []
     };
   },
+  componentDidMount: function() {
+    var _this = this;
+    this.getFilteredEntries(this.getDefaults(), function(entries) {
+      _this.setState({
+        filteredEntries: entries
+      });
+    });
+  },
   getInitialState: function() {
     var defaults = this.getDefaults();
     return {
@@ -253,7 +262,7 @@ var JournalApp = React.createClass({
       tags: defaults.tags,
       includeTags: defaults.includeTags,
       excludeTags: defaults.excludeTags,
-      filteredEntries: this.getFilteredEntries(defaults)
+      filteredEntries: []
     }
   },
   render: function() {

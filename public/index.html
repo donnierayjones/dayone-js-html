@@ -19,9 +19,20 @@
     <script src="js-build/script.js"></script>
   </head>
   <body>
+    <div class="hidden progress-overlay js-progress">
+      <div>
+        <h3 class="js-progress-title">
+        </h3>
+        <div class="progress">
+          <div class="progress-bar js-progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="">
+            <span class="sr-only">Complete</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="fileSelector">
       <a href="https://github.com/donnierayjones/dayone-js-html"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
-      <div class="jumbotron bg-dayone">
+      <div class="jumbotron bg-dayone margin-bottom-none">
         <div class="container">
           <div class="text-center">
             <h1>Day One to HTML <small>(to PDF)</small></h1>
@@ -74,6 +85,9 @@
       </div>
       <div class="margin-bottom-none">
         <div class="container">
+          <div class="alert alert-danger hidden js-invalid-dayone-file-alert">
+            Oops! That doesn't seem to be the Day One journal file.
+          </div>
           <div class="alert alert-danger hidden js-invalid-dayone-file-alert">
             Oops! That doesn't seem to be the Day One journal file.
           </div>

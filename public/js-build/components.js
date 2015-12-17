@@ -16,12 +16,16 @@ var JournalEntry = React.createClass({
         photoHtml,
         React.createElement(
           "div",
-          { className: "do-entry-date visible-xs" },
-          this.props.entry.creationDate(),
-          ' ',
-          this.props.entry.creationTime()
-        ),
-        React.createElement("div", { className: "do-entry-text", dangerouslySetInnerHTML: { __html: this.props.entry.text() } })
+          { className: "do-entry-text-container" },
+          React.createElement(
+            "div",
+            { className: "do-entry-date visible-xs" },
+            this.props.entry.creationDate(),
+            ' ',
+            this.props.entry.creationTime()
+          ),
+          React.createElement("div", { className: "do-entry-text", dangerouslySetInnerHTML: { __html: this.props.entry.text() } })
+        )
       ),
       React.createElement(
         "div",

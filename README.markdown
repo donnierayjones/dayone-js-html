@@ -32,12 +32,12 @@ make your adjustments to the JavaScript, HTML, and CSS as
 necessary. I've purposefully limited info, but there's nothing to
 stop you from also pulling in and displaying geo, weather, etc.
 
-This app only works when you run it from a server. Simply running
-the html file from disk won't work. The project includes the rack
-gem for rackup. So:
+This app requires Node.js. Install Node.js then run the following
+commands:
 
-1. `bundle install`
-2. `bundle exec rackup`
+1. `npm install`
+2. `npm start`
+3. Open http://localhost:8080 in Google Chrome
 
 Should be all you need to run it as-is. If you're wanting to make
 changes to the scripts, see the [React.js Getting Started Guide][6].

@@ -35,12 +35,14 @@ stop you from also pulling in and displaying geo, weather, etc.
 This app requires Node.js. Install Node.js then run the following
 commands:
 
-1. `npm install`
-2. `npm start`
-3. Open http://localhost:8080 in Google Chrome
+1. `npm install webpack webpack-dev-server -g`
+2. `npm install`
+3. `webpack`
+4. `webpack-dev-server`
+5. Open http://localhost:8080 in Google Chrome
 
-Should be all you need to run it as-is. If you're wanting to make
-changes to the scripts, see the [React.js Getting Started Guide][6].
+This should be all you need to run it as-is. If you're wanting to
+make changes to the scripts, see the [React.js Getting Started Guide][6].
 
 ## Example PDF Screenshot
 

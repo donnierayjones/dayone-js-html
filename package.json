@@ -7,8 +7,8 @@
     "prestart": "webpack --config production-webpack.config.js",
     "start": "node server.js"
   },
-  "author": "Ean Platter <eanplatter@gmail.com> (eanplatter.github.io)",
-  "license": "ISC",
+  "author": "Donnie Jones (donnierayjones.com)",
+  "license": "MIT",
   "dependencies": {
     "babel-core": "^6.2.1",
     "babel-loader": "^6.2.0",

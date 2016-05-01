@@ -7,7 +7,7 @@ export default class JournalEntries extends React.Component {
       <div>
       {this.props.entries.map(function(entry, i) {
         return (
-          <JournalEntry entry={entry} />
+          <JournalEntry key={entry.UUID()} entry={entry} />
         );
       }, this)}
       </div>

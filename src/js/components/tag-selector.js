@@ -10,14 +10,14 @@ export default class TagSelector extends React.Component {
       value: ""
     };
 
-    this.onClick = this.onClick.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
-  onClick() {
+  onChange() {
     this.setState({
       value: $('input:checked', ReactDOM.findDOMNode(this)).val()
     });
-    this.props.onClick();
+    this.props.onChange();
   }
 
   render() {
@@ -27,13 +27,13 @@ export default class TagSelector extends React.Component {
           {this.props.tagName}
         </td>
         <td className="text-center">
-          <input type="radio" onClick={this.onClick} name={this.props.tagName} value="" checked={this.state.value == ""} />
+          <input type="radio" onChange={this.onChange} name={this.props.tagName} value="" checked={this.state.value == ""} />
         </td>
         <td className="text-center">
-          <input type="radio" onClick={this.onClick} name={this.props.tagName} value="include" checked={this.state.value == "include"} />
+          <input type="radio" onChange={this.onChange} name={this.props.tagName} value="include" checked={this.state.value == "include"} />
         </td>
         <td className="text-center">
-          <input type="radio" onClick={this.onClick} name={this.props.tagName} value="exclude" checked={this.state.value == "exclude"} />
+          <input type="radio" onChange={this.onChange} name={this.props.tagName} value="exclude" checked={this.state.value == "exclude"} />
         </td>
       </tr>
     );

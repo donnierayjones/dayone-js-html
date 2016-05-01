@@ -1,11 +1,11 @@
 import marked from 'marked';
 import moment from 'moment';
 
+var timeZoneDifference = 6 * 60 * 60 * 1000;
+
 export default class DayOneEntry {
-  constructor(plistData) {
-    this.data = plistData;
-    this.photoDataURL = '';
-    this.shrinkedPhotoDataURL = '';
+  constructor(data) {
+    this.data = data;
   }
 
   get(key) {
@@ -13,15 +13,15 @@ export default class DayOneEntry {
   }
 
   UUID() {
-    return this.get('UUID');
+    return this.get('uuid');
   }
 
   creationDateNumeric() {
-    return new Date(this.get('Creation Date')).getTime();
+    return this._creationDate().getTime();
   }
 
   creationDateTime() {
-    return moment(new Date(this.get('Creation Date')));
+    return moment(this._creationDate());
   }
 
   creationDate() {
@@ -33,67 +33,81 @@ export default class DayOneEntry {
   }
 
   text() {
-    return marked(this.get('Entry Text'));
+    return this.get('text');
+  }
+
+  html() {
+    return marked(this.get('text'));
+  }
+
+  textWithInlinePhotos() {
+    var text = this.get('text');
+    var output = [];
+
+    var results = text.split(/(\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*)/);
+
+    results.forEach((result, i) => {
+      if(result.search(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/) >= 0) {
+        var match = result.match(/\!\[\]\(dayone-moment\:\/\/([0-9a-zA-Z]{32})\)\s*/)[1];
+        if(this.data.dayOnePhotos[match]) {
+          output.push({
+            id: this.UUID() + i,
+            type: 'photo',
+            data: this.data.dayOnePhotos[match]
+          });
+        }
+      }
+      else {
+        output.push({
+          id: this.UUID() + i,
+          type: 'text',
+          data: result
+        });
+      }
+    });
+
+    return output;
+  }
+
+  htmlWithInlinePhotos() {
+    return _.map(this.textWithInlinePhotos(), (item) => {
+      if(item.type == 'text') {
+        return {
+          id: item.id,
+          type: 'html',
+          data: marked(item.data)
+        };
+      } else {
+        return item;
+      }
+    });
   }
 
   tags() {
-    return _.filter(this.get('Tags'), function(t) { return t !== undefined; });
+    return this.data.tags || [];
+  }
+
+  photos() {
+    return _.values(this.data.dayOnePhotos);
+  }
+
+  hasLegacyPhoto() {
+    return this.hasPhoto() && this.get('text').search(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/) == -1;
+  }
+
+  hasInlinePhotos() {
+    return this.hasPhoto() && this.get('text').search(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/) >= 0;
+  }
+
+  getPhotoMD5(id) {
+    return this.data.dayOnePhotos[id]['md5'];
   }
 
   hasPhoto() {
-    return this.photoDataURL != '';
+    return _.values(this.data.dayOnePhotos).length > 0;
   }
 
-  hasShrinkedPhoto() {
-    return this.shrinkedPhotoDataURL != '';
-  }
-
-  setPhotoDataURL(dataURL) {
-    this.photoDataURL = dataURL;
-  }
-
-  getPhotoDataURL() {
-    return this.photoDataURL;
-  }
-
-  getShrinkedPhotoDataURL() {
-    return this.shrinkedPhotoDataURL;
-  }
-
-  shrinkPhoto(callback) {
-    var img = document.createElement("img");
-    var _this = this;
-
-    if(this.hasShrinkedPhoto()) {
-      callback(this.getShrinkedPhotoDataURL());
-      return;
-    }
-
-    img.src = this.photoDataURL;
-    img.onload = function() {
-      var maxWidth = 2048; // Any higher than this seems to render black images sometimes?
-      var canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-
-      var ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-      var width = img.width;
-      var height = img.height;
-
-      if (width > maxWidth) {
-        height *= maxWidth / width;
-        width = maxWidth;
-      }
-
-      canvas.width = width;
-      canvas.height = height;
-      var ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, width, height);
-
-      _this.shrinkedPhotoDataURL = canvas.toDataURL("image/jpeg");
-      callback(_this.shrinkedPhotoDataURL);
-    };
+  _creationDate() {
+    return new Date(this.get('creationDate'));
   }
 }

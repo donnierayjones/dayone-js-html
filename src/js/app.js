@@ -6,15 +6,18 @@ import JournalApp from './components/journal-app';
 import DayOneRenderer from './day-one/day-one-renderer';
 import $ from 'jquery';
 
+require('script!./../../bower_components/pdfmake/build/pdfmake.min.js');
+require('script!./../../bower_components/pdfmake/build/vfs_fonts.js');
+
 var renderer = new DayOneRenderer({
   fileSelector: '#fileSelector',
   dragAndDropSelector: 'body',
   renderTargetSelector: '#dayOneRenderTarget'
 });
 
-renderer.init(function(entries, tags) {
+renderer.init(function() {
   render(
-    <JournalApp entries={entries} tags={tags} renderer={renderer} />,
+    <JournalApp renderer={renderer} />,
     document.getElementById('dayOneRenderTarget')
   );
 });

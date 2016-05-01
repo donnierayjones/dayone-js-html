@@ -38,7 +38,7 @@ export default class TagSelectors extends React.Component {
         <tbody>
           {this.props.tags.map(function(tag, i) {
             return (
-              <TagSelector tagName={tag} onClick={this.onChange} />
+              <TagSelector key={tag} tagName={tag} onChange={this.onChange} />
             );
           }, this)}
         </tbody>

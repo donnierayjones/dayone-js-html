@@ -12,6 +12,24 @@
           </h3>
         </div>
       </div>
+      <div id="journalSelector" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Select Journal</h4>
+            </div>
+            <div class="modal-body">
+              <select class="form-control form-control-lg">
+                <option value="">Select...</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="fileSelector">
         <a href="https://github.com/donnierayjones/dayone-js-html"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
         <div class="jumbotron bg-dayone margin-bottom-none">
@@ -44,7 +62,7 @@
               <div class="col-sm-6">
                 <h3>Steps</h3>
                 <p>
-                1. Drag-and-Drop your Journal file onto this page
+                1. Drag-and-Drop your Day One JSON Export folder onto this page
                 <br/>
                 2. Filter your entries by date and tag
                 <br/>
@@ -68,17 +86,14 @@
         <div class="margin-bottom-none">
           <div class="container">
             <div class="alert alert-danger hidden js-invalid-dayone-file-alert">
-              Oops! That doesn't seem to be the Day One journal file.
-            </div>
-            <div class="alert alert-danger hidden js-invalid-dayone-file-alert">
-              Oops! That doesn't seem to be the Day One journal file.
+              Oops! That doesn't seem to be a Day One JSON Export.
             </div>
             <div class="row">
               <div class="col-xs-12">
                 <div id="dragAndDrop" class="text-dayone text-center">
-                  <h2>Drop Journal.dayone Here
+                  <h2>Drop Journal JSON Export Folder here.
                     <br/>
-                    <small>Usually found at <code>~/Dropbox/Apps/Day One/Journal.dayone</code></small>
+                    <small>Usually named something like "Export - All Entries (2016-12-10).zip". Unzip the file before dropping the folder here.</code></small>
                   </h2>
                 </div>
               </div>

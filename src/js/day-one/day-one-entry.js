@@ -33,15 +33,19 @@ export default class DayOneEntry {
   }
 
   text() {
-    return this.get('text');
+    return this.get('text') || "";
   }
 
+  textWithoutInlinePhotos() {
+      return this.text().replace(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/, '');
+  };
+
   html() {
-    return marked(this.get('text'));
+    return marked(this.text());
   }
 
   textWithInlinePhotos() {
-    var text = this.get('text');
+    var text = this.text();
     var output = [];
 
     var results = text.split(/(\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*)/);
@@ -92,15 +96,19 @@ export default class DayOneEntry {
   }
 
   hasLegacyPhoto() {
-    return this.hasPhoto() && this.get('text').search(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/) == -1;
+    return this.hasPhoto() && this.text().search(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/) == -1;
   }
 
   hasInlinePhotos() {
-    return this.hasPhoto() && this.get('text').search(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/) >= 0;
+    return this.hasPhoto() && this.text().search(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/) >= 0;
   }
 
   getPhotoMD5(id) {
     return this.data.dayOnePhotos[id]['md5'];
+  }
+
+  getPhotoData(id) {
+    return this.data.dayOnePhotos[id]['base64URL'];
   }
 
   hasPhoto() {

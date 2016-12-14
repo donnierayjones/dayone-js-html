@@ -7,7 +7,11 @@ var HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
   filename: 'index.html',
   inject: 'body'
 });
-var HotReloader = new webpack.HotModuleReplacementPlugin();
+var jqueryPlugin = new webpack.ProvidePlugin({
+  jQuery: 'jquery',
+  $: 'jquery',
+  jquery: 'jquery'
+});
 
 module.exports = {
   entry: [
@@ -31,7 +35,7 @@ module.exports = {
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
     ]
   },
-  plugins: [HTMLWebpackPluginConfig],
+  plugins: [HTMLWebpackPluginConfig, jqueryPlugin],
   devServer: {
     contentBase: __dirname + '/public',
     hot: true,

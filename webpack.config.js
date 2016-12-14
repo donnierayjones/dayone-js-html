@@ -8,6 +8,11 @@ var HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
   inject: 'body'
 });
 var HotReloader = new webpack.HotModuleReplacementPlugin();
+var jqueryPlugin = new webpack.ProvidePlugin({
+  jQuery: 'jquery',
+  $: 'jquery',
+  jquery: 'jquery'
+});
 
 module.exports = {
   devtool: 'source-map',
@@ -34,7 +39,7 @@ module.exports = {
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
     ]
   },
-  plugins: [HTMLWebpackPluginConfig, HotReloader],
+  plugins: [HTMLWebpackPluginConfig, HotReloader, jqueryPlugin],
   devServer: {
     contentBase: __dirname + '/dist',
     hot: true,

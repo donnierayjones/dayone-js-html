@@ -1,10 +1,15 @@
+let DATE_COLOR = '#399FC3';
+let DATE_FONT_SIZE = '12';
+let ENTRY_MARGIN = 0.05;
+let TEXT_WIDTH_W_PHOTO = 0.50;
+let TEXT_WIDTH_WO_PHOTO = 0.75;
 
 export default class PDFRenderer {
   constructor(entries) {
     this.entries = entries
     this.pageSize = { width: 594, height: 693 };
     this.pageOrientation = 'landscape',
-    this.entryMargin = this.pageSize.height * .05;
+    this.entryMargin = this.pageSize.height * ENTRY_MARGIN;
   }
 
   render(filename) {
@@ -26,12 +31,13 @@ export default class PDFRenderer {
     var columns = [];
     var text = [];
     var entryText = entry.textWithoutInlinePhotos();
-    var fontSize = this.getFontSize(entryText);
+    var textWidth = entry.hasPhoto() ? TEXT_WIDTH_W_PHOTO : TEXT_WIDTH_WO_PHOTO;
+    var fontSize = this.getFontSize(entryText, textWidth);
 
     text.push({
       text: entry.creationDate().toUpperCase(),
-      fontSize: fontSize * 0.75,
-      color: '#399FC3',
+      fontSize: DATE_FONT_SIZE,
+      color: DATE_COLOR,
       margin: [0, 0, 0, this.entryMargin / 3]
     });
 
@@ -42,7 +48,7 @@ export default class PDFRenderer {
 
     var textColumn = {
       stack: text,
-      width: entry.hasPhoto() ? '50%' : '75%',
+      width: (textWidth * 100).toString() + '%',
       margin: [this.entryMargin, this.entryMargin, this.entryMargin, 0]
     };
 
@@ -92,9 +98,35 @@ export default class PDFRenderer {
     return entryDefinition;
   }
 
-  getFontSize(text) {
-    return this.pageSize.height / 60;
+  getFontSize(text, textWidth) {
+    return this.calculateFontSize(
+      'Roboto',
+      text,
+      textWidth * this.pageSize.height,
+      this.pageSize.width / 4);
   }
+
+  calculateFontSize(font, text, width, height) { 
+    let min = 2;
+    let max = 16;
+    var fontSize = min;
+    let container = $('.js-font-size-container')
+      .show()
+      .css('width', width + 'pt')
+      .css('font-family', font)
+      .text(text);
+
+    do {
+      container.css('fontSize', fontSize + 'pt');
+      fontSize = fontSize + 1;
+      if(fontSize >= max) {
+        break;
+      }
+    } while ((container.height()*72/96) <= height);
+
+    return fontSize;
+  };
+
 
   blankImage() {
     return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';

@@ -1,5 +1,5 @@
 let DATE_COLOR = '#399FC3';
-let DATE_FONT_SIZE = '12';
+let DATE_FONT_SIZE = '8';
 let ENTRY_MARGIN = 0.05;
 let TEXT_WIDTH_W_PHOTO = 0.50;
 let TEXT_WIDTH_WO_PHOTO = 0.75;
@@ -9,7 +9,21 @@ export default class PDFRenderer {
     this.entries = entries
     this.pageSize = { width: 594, height: 693 };
     this.pageOrientation = 'landscape',
-    this.entryMargin = this.pageSize.height * ENTRY_MARGIN;
+    this.entryMargin = this.pageSize.width * ENTRY_MARGIN;
+  }
+
+  getPageWidth() {
+    if(this.pageOrientation == 'landscape') {
+      return this.pageSize.height;
+    }
+    return this.pageSize.width;
+  }
+
+  getPageHeight() {
+    if(this.pageOrientation == 'landscape') {
+      return this.pageSize.width;
+    }
+    return this.pageSize.height;
   }
 
   render(filename) {
@@ -32,13 +46,14 @@ export default class PDFRenderer {
     var text = [];
     var entryText = entry.textWithoutInlinePhotos();
     var textWidth = entry.hasPhoto() ? TEXT_WIDTH_W_PHOTO : TEXT_WIDTH_WO_PHOTO;
-    var fontSize = this.getFontSize(entryText, textWidth);
+    var textContainerWidth = textWidth * this.getPageWidth() - (this.entryMargin*2);
+    var fontSize = this.getFontSize(entryText, textContainerWidth);
 
     text.push({
       text: entry.creationDate().toUpperCase(),
       fontSize: DATE_FONT_SIZE,
       color: DATE_COLOR,
-      margin: [0, 0, 0, this.entryMargin / 3]
+      margin: [0, this.entryMargin * -0.5, 0, this.entryMargin * 0.25]
     });
 
     text.push({
@@ -48,43 +63,46 @@ export default class PDFRenderer {
 
     var textColumn = {
       stack: text,
-      width: (textWidth * 100).toString() + '%',
-      margin: [this.entryMargin, this.entryMargin, this.entryMargin, 0]
+      height: this.entryHeight(),
+      width: textContainerWidth
     };
 
-    var photoColumn = {};
+    // separate text and photos
+    var marginColumn = {
+      image: this.blankImage(),
+      height: this.entryHeight(),
+      width: this.entryMargin
+    };
+
+    var photoColumn = {
+      image: this.blankImage(),
+      height: this.entryHeight(),
+      width: this.getPageWidth() * (1-textWidth)
+    };
 
     if(entry.hasPhoto()) {
       photoColumn = {
         image: entry.photos()[0].base64URL,
-        fit: [this.pageSize.height / 2, this.pageSize.width / 2 - this.entryMargin * 2],
+        fit: [this.getPageWidth() / 2, this.entryHeight()],
         alignment: 'center',
-        margin: [0, this.entryMargin, 0, this.entryMargin]
-      };
-    } else {
-      photoColumn = {
-        image: this.blankImage(),
-        height: this.pageSize.width / 2,
-        width: this.pageSize.height / 4
       };
     }
-
-    // used to force 50% height on all entries
-    var paddingColumn = {
-        image: this.blankImage(),
-        height: this.pageSize.width / 2,
-        width: 1
-    };
 
     if((Math.floor(entryIndex / 2.0)) % 2 == 1) {
+      columns.push(marginColumn);
       columns.push(textColumn);
-      columns.push(paddingColumn);
+      columns.push(marginColumn);
       columns.push(photoColumn);
     } else {
       columns.push(photoColumn);
-      columns.push(paddingColumn);
+      columns.push(marginColumn);
       columns.push(textColumn);
+      columns.push(marginColumn);
     }
+
+    columns.forEach((c) => {
+      c.margin = [0, this.entryMargin, 0, 0];
+    });
 
     var entryDefinition = {
       columns: columns,
@@ -98,12 +116,12 @@ export default class PDFRenderer {
     return entryDefinition;
   }
 
-  getFontSize(text, textWidth) {
+  getFontSize(text, textContainerWidth) {
     return this.calculateFontSize(
       'Roboto',
       text,
-      textWidth * this.pageSize.height,
-      this.pageSize.width / 4);
+      textContainerWidth,
+      this.entryHeight());
   }
 
   calculateFontSize(font, text, width, height) { 
@@ -119,14 +137,17 @@ export default class PDFRenderer {
     do {
       container.css('fontSize', fontSize + 'pt');
       fontSize = fontSize + 1;
-      if(fontSize >= max) {
+      if(fontSize >= max + 1) {
         break;
       }
     } while ((container.height()*72/96) <= height);
 
-    return fontSize;
+    return fontSize - 1;
   };
 
+  entryHeight() {
+    return (this.getPageHeight() / 2) - (this.entryMargin * 2);
+  }
 
   blankImage() {
     return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';

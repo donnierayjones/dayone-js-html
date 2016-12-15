@@ -125,14 +125,36 @@ export default class JournalApp extends React.Component {
 
   render() {
     return (
-      <div className="row">
-        <div className="col-sm-2 hidden-xs">
-          <DateSelectors from={this.state.from.format('YYYY-MM-DD')} to={this.state.to.format('YYYY-MM-DD')} onChange={this.onDateChanged} />
-          <TagSelectors tags={this.tags} onChange={this.onTagsChanged} />
-          <button onClick={this.onDownload} className="btn btn-primary btn-block">Download PDF</button>
+      <div style={{'padding-top':'2em'}}>
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-8">
+              <p>
+                <a className="btn btn-danger btn-lg" href="/">
+                  <i className="glyphicon glyphicon-arrow-left"></i>{' '}Start over
+                </a>
+              </p>
+            </div>
+            <div className="col-sm-4 text-right">
+              <button onClick={this.onDownload} className="btn btn-success btn-block btn-lg">Download PDF</button>
+            </div>
+          </div>
         </div>
-        <div className="col-sm-10 col-xs-12">
-          <JournalEntries entries={this.state.filteredEntries} />
+        <hr/>
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-4 col-md-3 hidden-xs">
+              <div className="well">
+                <DateSelectors from={this.state.from.format('YYYY-MM-DD')} to={this.state.to.format('YYYY-MM-DD')} onChange={this.onDateChanged} />
+                <TagSelectors tags={this.tags} onChange={this.onTagsChanged} />
+              </div>
+            </div>
+            <div className="col-sm-8 col-md-9 col-xs-12">
+              <div className="well well-entries">
+                <JournalEntries entries={this.state.filteredEntries} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );

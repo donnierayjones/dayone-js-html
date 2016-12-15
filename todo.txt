@@ -1,0 +1,11 @@
+
+* Allow constants in pdf-renderer to be passed in via UI
+  * date color,
+  * margin,
+  * page size/orientation,
+  * auto bold first line,
+  * fonts
+* Markdown support in PDF
+* More accurate entry text height calculation (based on formatting
+  of all text rather than just the unformatted text)
+* Match HTML and PDF presentation

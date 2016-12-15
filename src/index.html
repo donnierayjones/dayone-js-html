@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Day One HTML</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>Day One to Photo Book</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">
   </head>
   <body>
     <div class="js-app-container" style="display:none;">
@@ -20,9 +21,7 @@
               <h4 class="modal-title" id="myModalLabel">Select Journal</h4>
             </div>
             <div class="modal-body">
-              <select class="form-control form-control-lg">
-                <option value="">Select...</option>
-              </select>
+              <select class="form-control form-control-lg"></select>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -35,7 +34,7 @@
         <div class="jumbotron bg-dayone margin-bottom-none">
           <div class="container">
             <div class="text-center">
-              <h1>Day One to HTML <small>(to PDF)</small></h1>
+              <h1>Day One to Photo Book</h1>
             </div>
           </div>
         </div>
@@ -47,8 +46,8 @@
                 <p>
                 Want a physical book from your <a target="_blank"
                   href="http://dayoneapp.com/">Day One</a> journal entries? With
-                this web app you can filter through your entries and then print
-                using the browser print feature.
+                this web app you can filter through your entries by date range and
+                tag. Then download a PDF to upload to Blurb (or your favorite service).
                 </p>
               </div>
               <div class="col-sm-6">
@@ -62,11 +61,11 @@
               <div class="col-sm-6">
                 <h3>Steps</h3>
                 <p>
-                1. Drag-and-Drop your Day One JSON Export folder onto this page
+                1. Drag-and-Drop your Day One JSON export
                 <br/>
                 2. Filter your entries by date and tag
                 <br/>
-                3. Print to PDF
+                3. Download PDF
                 </p>
               </div>
               <div class="col-sm-6">
@@ -79,6 +78,11 @@
                     <button class="btn btn-success btn-sm" type="submit" name="submit">Donate</button>
                   </p>
                 </form>
+                <h3>Security / privacy concerns?</h3>
+                <p>
+                  Your journal entries are safe. This is a client-side app,
+                  which means all of your journal entries stay on your computer.
+                </p>
               </div>
             </div>
           </div>
@@ -91,10 +95,10 @@
             <div class="row">
               <div class="col-xs-12">
                 <div id="dragAndDrop" class="text-dayone text-center">
-                  <h2>Drop Journal JSON Export Folder here.
-                    <br/>
-                    <small>Usually named something like "Export - All Entries (2016-12-10).zip". Unzip the file before dropping the folder here.</code></small>
-                  </h2>
+                  <h2>Drop Journal JSON Export Folder here.</h2>
+                  <p>
+                  Usually named something like <code>Export - All Entries (2016-12-10).zip</code>. <strong>Unzip the file</strong> before dropping the folder here.
+                  </p>
                 </div>
               </div>
             </div>
@@ -108,9 +112,7 @@
           </div>
         </div>
       </div>
-      <div class="container">
-        <div id="dayOneRenderTarget"></div>
-      </div>
+      <div id="dayOneRenderTarget"></div>
     </div>
     <div style="position:absolute;background-color:#fff;">
       <pre class="js-font-size-container" style="position:relative;z-index:-1;white-space:pre-wrap;word-break:break-word;margin:0;padding:0;"></pre>

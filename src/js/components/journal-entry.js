@@ -27,22 +27,22 @@ export default class JournalEntry extends React.Component {
 
     return (
       <div className="row do-entry">
-        <div className="col-lg-10 col-md-9 col-sm-8 col-xs-12">
-          { legacyPhotoHtml }
-          <div className="do-entry-text-container">
-            <div className="do-entry-date visible-xs">
-              {this.props.entry.creationDate()}{' '}{this.props.entry.creationTime()}
-            </div>
-            { entryText }
-          </div>
-        </div>
-        <div className="col-lg-2 col-md-3 col-sm-4 hidden-xs">
+        <div className="col-lg-3 col-md-4 col-sm-4 hidden-xs">
           <div className="do-entry-date">
             {this.props.entry.creationDate()}<br/>
             {this.props.entry.creationTime()}
           </div>
           <div className="do-entry-tags">
             {this.props.entry.tags().join(', ')}
+          </div>
+        </div>
+        <div className="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+          { legacyPhotoHtml }
+          <div className="do-entry-text-container">
+            <div className="do-entry-date visible-xs">
+              {this.props.entry.creationDate()}{' '}{this.props.entry.creationTime()}
+            </div>
+            { entryText }
           </div>
         </div>
       </div>

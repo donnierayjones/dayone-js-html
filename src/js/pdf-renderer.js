@@ -8,7 +8,7 @@ let AUTO_BOLD_LINE_MAX_LENGTH = 50;
 let PAGE_WIDTH = 594;
 let PAGE_HEIGHT = 693;
 let PAGE_ORIENT = 'landscape';
-let FONT = 'Roboto';
+let FONT = 'Lora';
 
 export default class PDFRenderer {
   constructor(entries) {
@@ -16,6 +16,21 @@ export default class PDFRenderer {
     this.pageSize = { width: PAGE_WIDTH, height: PAGE_HEIGHT };
     this.pageOrientation = PAGE_ORIENT,
     this.entryMargin = this.pageSize.width * ENTRY_MARGIN;
+
+    pdfMake.fonts = {
+      lato: {
+        normal: 'Lato-Regular.ttf',
+        bold: 'Lato-Bold.ttf',
+        italics: 'Lato-Italic.ttf',
+        bolditalics: 'Lato-BoldItalic.ttf'
+      },
+      lora: {
+        normal: 'Lora-Regular.ttf',
+        bold: 'Lora-Bold.ttf',
+        italics: 'Lora-Italic.ttf',
+        bolditalics: 'Lora-BoldItalic.ttf'
+      }
+    };
   }
 
   getPageWidth() {
@@ -37,6 +52,9 @@ export default class PDFRenderer {
       pageSize: this.pageSize,
       pageOrientation: this.pageOrientation,
       pageMargins: [0, 0, 0, 0],
+      defaultStyle: {
+        font: 'lato'
+      },
       content: []
     };
 
@@ -67,9 +85,10 @@ export default class PDFRenderer {
     if(AUTO_BOLD_FIRST_LINE && firstLine) {
       text.push({
         text: firstLine,
-        fontSize: fontSize,
+        fontSize: fontSize + 2,
         bold: true,
-        margin: [0, 0, 0, this.entryMargin * 0.15]
+        margin: [0, 0, 0, this.entryMargin * 0.15],
+        font: 'lora'
       });
       text.push({
         text: this.get2ndLineAndBeyond(entryText),
@@ -104,7 +123,7 @@ export default class PDFRenderer {
     if(entry.hasPhoto()) {
       photoColumn = {
         image: entry.photos()[0].base64URL,
-        fit: [this.getPageWidth() / 2, this.entryHeight()],
+        fit: [this.getPageWidth() * (1-textWidth), this.entryHeight()],
         alignment: 'center',
       };
     }
@@ -139,20 +158,19 @@ export default class PDFRenderer {
 
   getFontSize(text, textContainerWidth) {
     return this.calculateFontSize(
-      FONT,
       text,
       textContainerWidth,
       this.entryHeight());
   }
 
-  calculateFontSize(font, text, width, height) { 
+  calculateFontSize(text, width, height) { 
     let min = 2;
     let max = 16;
     var fontSize = min;
     let container = $('.js-font-size-container')
       .show()
       .css('width', width + 'pt')
-      .css('font-family', font)
+      .css('font-family', FONT)
       .text(text);
 
     do {

@@ -8,7 +8,7 @@ import $ from 'jquery';
 import 'bootstrap/dist/js/bootstrap.js';
 
 require('script!./../../bower_components/pdfmake/build/pdfmake.min.js');
-require('script!./../../bower_components/pdfmake/build/vfs_fonts.js');
+require('script!./../../vfs_fonts.js');
 
 var renderer = new DayOneRenderer({
   fileSelector: '#fileSelector',

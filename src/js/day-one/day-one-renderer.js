@@ -80,6 +80,8 @@ export default class DayOneRenderer {
           this.selectJournal(journalValue);
         }
       });
+      $select.find('option').remove();
+      $select.append($('<option>', { value: '', text: 'Select...' }));
       journalFiles.forEach(function(e) {
         $select.append($('<option>', { value: e.name, text: e.name.substr(0, e.name.length - 5)}));
       });

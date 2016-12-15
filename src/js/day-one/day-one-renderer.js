@@ -49,17 +49,24 @@ export default class DayOneRenderer {
 
     var dayOneFolder = files[0].webkitGetAsEntry();
 
-    if(dayOneFolder.isDirectory === false || dayOneFolder.name.startsWith('Export') === false) {
+    if(dayOneFolder.isDirectory == false || this.isDroppedFileDayOneExport(dayOneFolder) === false) {
       setTimeout(() => {
         this.showInvalidFileAlert();
       }, 100);
       return;
     }
 
-    this.dayOneFolder = dayOneFolder;
-
-    this.getJournalFiles(this.dayOneFolder)
+    this.getJournalFiles(dayOneFolder)
       .then((journalFiles) => this.showJournalSelection(journalFiles));
+
+    this.dayOneFolder = dayOneFolder;
+  }
+
+  isDroppedFileDayOneExport(dayOneFolder) {
+    this.getJournalFiles(dayOneFolder)
+      .then((journalFiles) => {
+        return journalFiles.length > 0;
+      });
   }
 
   showJournalSelection(journalFiles) {

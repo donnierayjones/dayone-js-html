@@ -1,5 +1,6 @@
 import marked from 'marked';
 import moment from 'moment';
+import removeMd from 'remove-markdown';
 
 var timeZoneDifference = 6 * 60 * 60 * 1000;
 
@@ -37,7 +38,7 @@ export default class DayOneEntry {
   }
 
   textWithoutInlinePhotos() {
-      return this.text().replace(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/, '');
+      return removeMd(this.text().replace(/\!\[\]\(dayone-moment\:\/\/[0-9a-zA-Z]{32}\)\s*/g, ''));
   };
 
   html() {

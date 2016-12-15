@@ -3,12 +3,18 @@ let DATE_FONT_SIZE = '8';
 let ENTRY_MARGIN = 0.05;
 let TEXT_WIDTH_W_PHOTO = 0.50;
 let TEXT_WIDTH_WO_PHOTO = 0.75;
+let AUTO_BOLD_FIRST_LINE = true;
+let AUTO_BOLD_LINE_MAX_LENGTH = 50;
+let PAGE_WIDTH = 594;
+let PAGE_HEIGHT = 693;
+let PAGE_ORIENT = 'landscape';
+let FONT = 'Roboto';
 
 export default class PDFRenderer {
   constructor(entries) {
     this.entries = entries
-    this.pageSize = { width: 594, height: 693 };
-    this.pageOrientation = 'landscape',
+    this.pageSize = { width: PAGE_WIDTH, height: PAGE_HEIGHT };
+    this.pageOrientation = PAGE_ORIENT,
     this.entryMargin = this.pageSize.width * ENTRY_MARGIN;
   }
 
@@ -56,10 +62,25 @@ export default class PDFRenderer {
       margin: [0, this.entryMargin * -0.5, 0, this.entryMargin * 0.25]
     });
 
-    text.push({
-      text: entryText,
-      fontSize: fontSize
-    });
+    var firstLine = this.getFirstLine(entryText);
+
+    if(AUTO_BOLD_FIRST_LINE && firstLine) {
+      text.push({
+        text: firstLine,
+        fontSize: fontSize,
+        bold: true,
+        margin: [0, 0, 0, this.entryMargin * 0.15]
+      });
+      text.push({
+        text: this.get2ndLineAndBeyond(entryText),
+        fontSize: fontSize
+      });
+    } else {
+      text.push({
+        text: entryText,
+        fontSize: fontSize
+      });
+    }
 
     var textColumn = {
       stack: text,
@@ -118,7 +139,7 @@ export default class PDFRenderer {
 
   getFontSize(text, textContainerWidth) {
     return this.calculateFontSize(
-      'Roboto',
+      FONT,
       text,
       textContainerWidth,
       this.entryHeight());
@@ -151,5 +172,19 @@ export default class PDFRenderer {
 
   blankImage() {
     return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+  }
+
+  getFirstLine(entryText) {
+    var firstLine = (entryText.split("\n") || [''])[0];
+
+    if (firstLine.length < AUTO_BOLD_LINE_MAX_LENGTH) {
+      return firstLine;
+    }
+  }
+
+  get2ndLineAndBeyond(entryText) {
+    var lines = entryText.split("\n") || [''];
+    lines.shift();
+    return lines.join("\n").trim();
   }
 }

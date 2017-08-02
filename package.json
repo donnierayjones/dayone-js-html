@@ -7,6 +7,9 @@
     "prestart": "webpack --config production-webpack.config.js",
     "start": "node server.js"
   },
+  "engines": {
+    "node": "6.11.1"
+  },
   "author": "Donnie Jones (donnierayjones.com)",
   "license": "MIT",
   "dependencies": {
